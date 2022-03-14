@@ -16,6 +16,16 @@ user = db["User"]
 app = Flask(__name__)
 jwt = JWTManager(app)
 
+# configure the smtp mail
+app.config["JWT_SECRET_KEY"] = "riyasecretkey"
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'tripuranunna10@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Priyanka@20'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
 
 @app.route("/register/", methods=["POST"])
 def register():
@@ -55,6 +65,21 @@ def login():
         return jsonify(message="Login Succeeded!", access_token=access_token), 201
     else:
         return jsonify(message="Bad Email or Password"), 401
+
+
+@app.route("/mail")
+def index():
+    """
+    Sending the email to the registered email account for the activation
+    """
+    msg = Message(
+        'Hello',
+        sender='tripuranunna10@gmail.com',
+        recipients=['receiver’priyanunna20@gmail.com']
+    )
+    msg.body = 'Hello Flask message sent from Flask-Mail'.encode('utf-8')
+    mail.send(msg)
+    return 'Sent'
 
 
 if __name__ == "__main__":
